@@ -20,6 +20,10 @@ public class ScoreBoard {
     }
 
     public void updateScore(String homeTeam, int homeTeamScore, String awayTeam, int awayTeamScore) {
+        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
+            throw new RuntimeException("Invalid input: Home/away team null or empty");
+        }
+
         Match match = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
         String matchId = homeTeam + "_" + awayTeam;
 
