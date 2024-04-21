@@ -1,6 +1,9 @@
 package com.odds.scoreboard;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScoreBoard {
 
@@ -46,6 +49,11 @@ public class ScoreBoard {
     }
 
     public List<Match> matchesInProgress() {
-        return storage.getAll();
+        List<Match> matches = storage.getAll();
+        Comparator<Match> cmp = Comparator.comparing(Match::getTotalScore).reversed();
+
+        return matches.stream()
+                .sorted(cmp)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

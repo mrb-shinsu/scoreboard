@@ -16,6 +16,10 @@ public class Match {
         this.awayTeamScore = awayTeamScore;
     }
 
+    public int getTotalScore() {
+        return this.homeTeamScore + this.awayTeamScore;
+    }
+
     public int hashCode() {
         return Objects.hash(homeTeamName, homeTeamScore, awayTeamName, awayTeamScore);
     }
