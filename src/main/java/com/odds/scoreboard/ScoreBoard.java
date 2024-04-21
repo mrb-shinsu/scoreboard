@@ -9,6 +9,10 @@ public class ScoreBoard {
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
+        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
+            throw new RuntimeException("Invalid input: Home/away team null or empty");
+        }
+
         Match match = new Match(homeTeam, 0, awayTeam, 0);
         String matchId = homeTeam + "_" + awayTeam;
 
