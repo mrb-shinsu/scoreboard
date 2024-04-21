@@ -109,4 +109,15 @@ public class ScoreBoardTest {
                 delete(expectedKey);
     }
 
+    @Test
+    public void finishMatchIfStorageExceptionThrowException() {
+        String homeTeam = "Mexico", awayTeam = "Canada";
+        doThrow(RuntimeException.class).when(matchStorage)
+                .delete(anyString());
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        assertThrows(RuntimeException.class, () -> sc.finishMatch(homeTeam, awayTeam));
+    }
+
+
 }
