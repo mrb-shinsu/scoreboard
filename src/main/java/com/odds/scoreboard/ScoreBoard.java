@@ -46,6 +46,6 @@ public class ScoreBoard {
     }
 
     public List<Match> matchesInProgress() {
-        return null;
+        return storage.getAll();
     }
 }
