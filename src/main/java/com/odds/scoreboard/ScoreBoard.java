@@ -18,4 +18,7 @@ public class ScoreBoard {
 
         storage.save(matchId, match);
     }
+
+    public void updateScore(String homeTeam, int homeTeamScore, String awayTeam, int awayTeamScore) {
+    }
 }
