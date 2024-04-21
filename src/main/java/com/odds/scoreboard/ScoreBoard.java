@@ -1,5 +1,7 @@
 package com.odds.scoreboard;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -8,9 +10,11 @@ import java.util.stream.Collectors;
 public class ScoreBoard {
 
     private MatchStorage storage;
+    private Clock clock;
 
-    public ScoreBoard(MatchStorage storage) {
+    public ScoreBoard(MatchStorage storage, Clock clock) {
         this.storage = storage;
+        this.clock = clock;
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
@@ -18,7 +22,8 @@ public class ScoreBoard {
             throw new RuntimeException("Invalid input: Home/away team null or empty");
         }
 
-        Match match = new Match(homeTeam, 0, awayTeam, 0);
+        OffsetDateTime startTime = OffsetDateTime.now(clock);
+        Match match = new Match(homeTeam, 0, awayTeam, 0, startTime);
         String matchId = homeTeam + "_" + awayTeam;
 
         storage.save(matchId, match);

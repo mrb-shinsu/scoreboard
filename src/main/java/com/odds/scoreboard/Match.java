@@ -1,5 +1,6 @@
 package com.odds.scoreboard;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Match {
@@ -9,6 +10,8 @@ public class Match {
     private String awayTeamName;
     private int awayTeamScore;
 
+    private OffsetDateTime startTime;
+
     public Match(String homeTeamName, int homeTeamScore, String awayTeamName, int awayTeamScore) {
         this.homeTeamName = homeTeamName;
         this.homeTeamScore = homeTeamScore;
@@ -16,12 +19,17 @@ public class Match {
         this.awayTeamScore = awayTeamScore;
     }
 
+    public Match(String homeTeamName, int homeTeamScore, String awayTeamName, int awayTeamScore, OffsetDateTime startTime) {
+        this(homeTeamName, homeTeamScore, awayTeamName, awayTeamScore);
+        this.startTime = startTime;
+    }
+
     public int getTotalScore() {
         return this.homeTeamScore + this.awayTeamScore;
     }
 
     public int hashCode() {
-        return Objects.hash(homeTeamName, homeTeamScore, awayTeamName, awayTeamScore);
+        return Objects.hash(homeTeamName, homeTeamScore, awayTeamName, awayTeamScore, startTime);
     }
 
     public boolean equals(Object obj) {
@@ -41,7 +49,8 @@ public class Match {
         return Objects.equals(homeTeamName, other.homeTeamName) &&
                 Objects.equals(homeTeamScore, other.homeTeamScore) &&
                 Objects.equals(awayTeamName, other.awayTeamName) &&
-                Objects.equals(awayTeamScore, other.awayTeamScore);
+                Objects.equals(awayTeamScore, other.awayTeamScore) &&
+                Objects.equals(startTime, other.startTime);
     }
 
     @Override
@@ -50,7 +59,8 @@ public class Match {
                 "homeTeamName='" + homeTeamName + '\'' +
                 ", homeTeamScore=" + homeTeamScore +
                 ", awayTeamName='" + awayTeamName + '\'' +
-                ", awayTeamScore=" + awayTeamScore +
+                ", awayTeamScore='" + awayTeamScore + '\'' +
+                ", startTime=" + startTime +
                 '}';
     }
 }
