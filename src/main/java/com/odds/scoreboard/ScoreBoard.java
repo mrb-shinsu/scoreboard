@@ -29,10 +29,7 @@ public class ScoreBoard {
 
     public void updateScore(String homeTeam, int homeTeamScore, String awayTeam, int awayTeamScore) {
         validateNotNullOrEmpty(homeTeam, awayTeam);
-
-        if (homeTeamScore < 0 || awayTeamScore < 0) {
-            throw new RuntimeException("Invalid input: Home/away team score negative");
-        }
+        validateNotNegative(homeTeamScore, awayTeamScore);
 
         Match match = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
         String matchId = homeTeam + "_" + awayTeam;
@@ -63,6 +60,14 @@ public class ScoreBoard {
         for (String p : params) {
             if (p == null || p.isBlank()) {
                 throw new RuntimeException("Invalid input: Params null or empty");
+            }
+        }
+    }
+
+    private void validateNotNegative(int... params) {
+        for (int p : params) {
+            if (p < 0) {
+                throw new RuntimeException("Invalid input: Params negative");
             }
         }
     }

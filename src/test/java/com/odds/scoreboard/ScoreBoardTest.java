@@ -12,6 +12,9 @@ import static org.mockito.Mockito.*;
 
 public class ScoreBoardTest {
 
+    private static final String INVALID_INPUT_NULL_EMPTY = "Invalid input: Params null or empty";
+    private static final String INVALID_INPUT_NEGATIVE = "Invalid input: Params negative";
+
     private final MatchStorage matchStorage = mock(MatchStorage.class);
     private final Clock clock = Clock.fixed(Instant.parse("2024-04-22T12:00:00.00Z"), ZoneId.of("UTC"));
 
@@ -45,9 +48,8 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         Exception e = assertThrows(RuntimeException.class, () -> sc.startMatch(homeTeam, awayTeam));
 
-        String expectedMessage = "Invalid input: Home/away team null or empty";
         String actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
     @Test
@@ -83,9 +85,8 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
-        String expectedMessage = "Invalid input: Home/away team null or empty";
         String actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
     @ParameterizedTest
@@ -96,9 +97,8 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
-        String expectedMessage = "Invalid input: Home/away team score negative";
         String actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMessage.contains(INVALID_INPUT_NEGATIVE));
     }
 
     @Test
@@ -129,9 +129,8 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         Exception e = assertThrows(RuntimeException.class, () -> sc.finishMatch(homeTeam, awayTeam));
 
-        String expectedMessage = "Invalid input: Home/away team null or empty";
         String actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
     @Test
