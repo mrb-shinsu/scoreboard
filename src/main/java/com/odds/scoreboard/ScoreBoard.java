@@ -34,5 +34,8 @@ public class ScoreBoard {
     }
 
     public void finishMatch(String homeTeam, String awayTeam) {
+        String matchId = homeTeam + "_" + awayTeam;
+
+        storage.delete(matchId);
     }
 }
