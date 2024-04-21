@@ -7,4 +7,7 @@ public class MatchStorage {
 
     public void update(String key, Match value) {
     }
+
+    public void delete(String expectedKey) {
+    }
 }

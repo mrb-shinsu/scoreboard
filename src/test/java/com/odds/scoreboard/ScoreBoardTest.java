@@ -97,4 +97,16 @@ public class ScoreBoardTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @Test
+    public void finishMatchIfAllValidSuccess() {
+        String homeTeam = "Mexico", awayTeam = "Canada";
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        sc.finishMatch(homeTeam, awayTeam);
+
+        String expectedKey = homeTeam + "_" + awayTeam;
+        verify(matchStorage, times(1)).
+                delete(expectedKey);
+    }
+
 }

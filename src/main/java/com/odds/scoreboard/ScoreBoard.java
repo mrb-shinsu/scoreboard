@@ -32,4 +32,7 @@ public class ScoreBoard {
 
         storage.update(matchId, match);
     }
+
+    public void finishMatch(String homeTeam, String awayTeam) {
+    }
 }
