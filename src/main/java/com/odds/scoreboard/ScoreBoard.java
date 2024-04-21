@@ -23,6 +23,9 @@ public class ScoreBoard {
         if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
             throw new RuntimeException("Invalid input: Home/away team null or empty");
         }
+        if (homeTeamScore < 0 || awayTeamScore < 0) {
+            throw new RuntimeException("Invalid input: Home/away team score negative");
+        }
 
         Match match = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
         String matchId = homeTeam + "_" + awayTeam;
