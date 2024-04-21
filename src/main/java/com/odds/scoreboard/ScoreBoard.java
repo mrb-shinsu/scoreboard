@@ -55,7 +55,9 @@ public class ScoreBoard {
 
     public List<Match> matchesInProgress() {
         List<Match> matches = storage.getAll();
-        Comparator<Match> cmp = Comparator.comparing(Match::getTotalScore).reversed();
+        Comparator<Match> cmp = Comparator.comparing(Match::getTotalScore)
+                .thenComparing(Match::getStartTime)
+                .reversed();
 
         return matches.stream()
                 .sorted(cmp)

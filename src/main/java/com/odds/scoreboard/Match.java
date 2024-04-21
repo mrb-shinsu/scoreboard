@@ -28,6 +28,10 @@ public class Match {
         return this.homeTeamScore + this.awayTeamScore;
     }
 
+    public OffsetDateTime getStartTime() {
+        return startTime;
+    }
+
     public int hashCode() {
         return Objects.hash(homeTeamName, homeTeamScore, awayTeamName, awayTeamScore, startTime);
     }
