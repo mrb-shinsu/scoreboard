@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class ScoreBoardTest {
         sc.startMatch(homeTeam, awayTeam);
 
         String expectedKey = homeTeam + "_" + awayTeam;
-        Match expectedMatch = new Match(homeTeam, 0, awayTeam, 0);
+        OffsetDateTime expectedStartTime = OffsetDateTime.now(clock);
+        Match expectedMatch = new Match(homeTeam, 0, awayTeam, 0, expectedStartTime);
         verify(matchStorage, times(1)).
                 save(expectedKey, expectedMatch);
     }
