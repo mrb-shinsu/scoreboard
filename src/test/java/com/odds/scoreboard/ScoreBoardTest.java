@@ -75,11 +75,24 @@ public class ScoreBoardTest {
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
     public void updateScoreIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         int homeTeamScore = 1, awayTeamScore = 2;
-        
+
         ScoreBoard sc = new ScoreBoard(matchStorage);
         Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
         String expectedMessage = "Invalid input: Home/away team null or empty";
+        String actualMessage = e.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"-1,1", "1,-1", "-1,-1"})
+    public void updateScoreIfHomeAndAwayTeamScoreNegativeThrowException(int homeTeamScore, int awayTeamScore) {
+        String homeTeam = "Mexico", awayTeam = "Canada";
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+
+        String expectedMessage = "Invalid input: Home/away team score negative";
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
