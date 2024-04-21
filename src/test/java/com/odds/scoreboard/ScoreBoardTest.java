@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -162,17 +159,78 @@ public class ScoreBoardTest {
 
     @Test
     public void matchesInProgressIfDiffTotalScoresReturnOrdered() {
-        List<Match> unorderedMatches = List.of(new Match("Mexico", 0, "Canada", 5),
-                new Match("Spain", 10, "Brazil", 2),
-                new Match("Germany", 2, "France", 2));
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime nowPlus10Minutes = now.plusMinutes(10);
+
+        List<Match> unorderedMatches = List.of(new Match("Mexico", 0, "Canada", 5, now),
+                new Match("Spain", 10, "Brazil", 2, nowPlus10Minutes),
+                new Match("Germany", 2, "France", 2, nowPlus10Minutes));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         List<Match> matches = sc.matchesInProgress();
 
-        List<Match> expectedMatches = List.of(new Match("Spain", 10, "Brazil", 2),
-                new Match("Mexico", 0, "Canada", 5),
-                new Match("Germany", 2, "France", 2));
+        List<Match> expectedMatches = List.of(new Match("Spain", 10, "Brazil", 2, nowPlus10Minutes),
+                new Match("Mexico", 0, "Canada", 5, now),
+                new Match("Germany", 2, "France", 2, nowPlus10Minutes));
+        assertNotNull(matches);
+        assertEquals(expectedMatches, matches);
+    }
+
+    @Test
+    public void matchesInProgressIfSomeTotalScoresEqualReturnOrdered() {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime nowMinus10Minutes = now.minusMinutes(10);
+        OffsetDateTime nowMinus20Minutes = now.minusMinutes(20);
+        OffsetDateTime nowMinus30Minutes = now.minusMinutes(30);
+        OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
+
+        List<Match> unorderedMatches = List.of(
+                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
+                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
+                new Match("Germany", 2, "France", 2, nowMinus20Minutes),
+                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
+                new Match("Argentina", 3, "Australia", 1, now));
+        when(matchStorage.getAll()).thenReturn(unorderedMatches);
+
+        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
+        List<Match> matches = sc.matchesInProgress();
+
+        List<Match> expectedMatches = List.of(
+                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
+                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
+                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
+                new Match("Argentina", 3, "Australia", 1, now),
+                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
+        assertNotNull(matches);
+        assertEquals(expectedMatches, matches);
+    }
+
+    @Test
+    public void matchesInProgressIfAlreadyOrderedReturnOrdered() {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime nowMinus10Minutes = now.minusMinutes(10);
+        OffsetDateTime nowMinus20Minutes = now.minusMinutes(20);
+        OffsetDateTime nowMinus30Minutes = now.minusMinutes(30);
+        OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
+
+        List<Match> unorderedMatches = List.of(
+                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
+                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
+                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
+                new Match("Argentina", 3, "Australia", 1, now),
+                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
+        when(matchStorage.getAll()).thenReturn(unorderedMatches);
+
+        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
+        List<Match> matches = sc.matchesInProgress();
+
+        List<Match> expectedMatches = List.of(
+                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
+                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
+                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
+                new Match("Argentina", 3, "Australia", 1, now),
+                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
         assertNotNull(matches);
         assertEquals(expectedMatches, matches);
     }
