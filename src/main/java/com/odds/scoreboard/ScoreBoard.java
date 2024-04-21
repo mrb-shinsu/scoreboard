@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class ScoreBoard {
 
-    private MatchStorage storage;
-    private Clock clock;
+    private final MatchStorage storage;
+    private final Clock clock;
 
     public ScoreBoard(MatchStorage storage, Clock clock) {
         this.storage = storage;
@@ -18,9 +18,7 @@ public class ScoreBoard {
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
-        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
-            throw new RuntimeException("Invalid input: Home/away team null or empty");
-        }
+        validateNotNullOrEmpty(homeTeam, awayTeam);
 
         OffsetDateTime startTime = OffsetDateTime.now(clock);
         Match match = new Match(homeTeam, 0, awayTeam, 0, startTime);
@@ -30,9 +28,8 @@ public class ScoreBoard {
     }
 
     public void updateScore(String homeTeam, int homeTeamScore, String awayTeam, int awayTeamScore) {
-        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
-            throw new RuntimeException("Invalid input: Home/away team null or empty");
-        }
+        validateNotNullOrEmpty(homeTeam, awayTeam);
+
         if (homeTeamScore < 0 || awayTeamScore < 0) {
             throw new RuntimeException("Invalid input: Home/away team score negative");
         }
@@ -44,9 +41,7 @@ public class ScoreBoard {
     }
 
     public void finishMatch(String homeTeam, String awayTeam) {
-        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
-            throw new RuntimeException("Invalid input: Home/away team null or empty");
-        }
+        validateNotNullOrEmpty(homeTeam, awayTeam);
 
         String matchId = homeTeam + "_" + awayTeam;
 
@@ -62,5 +57,13 @@ public class ScoreBoard {
         return matches.stream()
                 .sorted(cmp)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private void validateNotNullOrEmpty(String... params) {
+        for (String p : params) {
+            if (p == null || p.isBlank()) {
+                throw new RuntimeException("Invalid input: Params null or empty");
+            }
+        }
     }
 }
