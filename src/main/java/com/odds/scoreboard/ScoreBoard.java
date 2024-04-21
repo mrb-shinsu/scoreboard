@@ -34,6 +34,10 @@ public class ScoreBoard {
     }
 
     public void finishMatch(String homeTeam, String awayTeam) {
+        if (homeTeam == null || homeTeam.isBlank() || awayTeam == null || awayTeam.isBlank()) {
+            throw new RuntimeException("Invalid input: Home/away team null or empty");
+        }
+
         String matchId = homeTeam + "_" + awayTeam;
 
         storage.delete(matchId);
