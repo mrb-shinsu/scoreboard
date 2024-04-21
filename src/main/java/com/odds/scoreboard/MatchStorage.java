@@ -1,5 +1,7 @@
 package com.odds.scoreboard;
 
+import java.util.List;
+
 public class MatchStorage {
 
     public void save(String key, Match value) {
@@ -9,5 +11,9 @@ public class MatchStorage {
     }
 
     public void delete(String expectedKey) {
+    }
+
+    public List<Match> getAll() {
+        return null;
     }
 }

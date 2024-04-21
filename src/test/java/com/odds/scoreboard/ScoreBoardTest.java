@@ -4,8 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ScoreBoardTest {
@@ -128,5 +129,16 @@ public class ScoreBoardTest {
         String expectedMessage = "Invalid input: Home/away team null or empty";
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void matchesInProgressIfNoMatchesReturnEmptyList() {
+        when(matchStorage.getAll()).thenReturn(List.of());
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        List<Match> matches = sc.matchesInProgress();
+
+        assertNotNull(matches);
+        assertEquals(0, matches.size());
     }
 }

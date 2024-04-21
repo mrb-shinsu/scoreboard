@@ -1,5 +1,7 @@
 package com.odds.scoreboard;
 
+import java.util.List;
+
 public class ScoreBoard {
 
     private MatchStorage storage;
@@ -41,5 +43,9 @@ public class ScoreBoard {
         String matchId = homeTeam + "_" + awayTeam;
 
         storage.delete(matchId);
+    }
+
+    public List<Match> matchesInProgress() {
+        return null;
     }
 }
