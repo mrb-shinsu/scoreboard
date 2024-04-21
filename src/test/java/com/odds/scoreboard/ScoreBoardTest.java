@@ -60,4 +60,15 @@ public class ScoreBoardTest {
                 update(expectedKey, expectedMatch);
     }
 
+    @Test
+    public void updateScoreIfStorageExceptionThrowException() {
+        String homeTeam = "Mexico", awayTeam = "Canada";
+        int homeTeamScore = 1, awayTeamScore = 2;
+        doThrow(RuntimeException.class).when(matchStorage)
+                .update(anyString(), any());
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+    }
+
 }
