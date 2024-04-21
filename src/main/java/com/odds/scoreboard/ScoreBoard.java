@@ -9,6 +9,9 @@ public class ScoreBoard {
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
+        Match match = new Match(homeTeam, 0, awayTeam, 0);
+        String matchId = homeTeam + "_" + awayTeam;
 
+        storage.save(matchId, match);
     }
 }
