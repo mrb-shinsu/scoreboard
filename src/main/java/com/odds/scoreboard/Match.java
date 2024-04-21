@@ -39,4 +39,14 @@ public class Match {
                 Objects.equals(awayTeamName, other.awayTeamName) &&
                 Objects.equals(awayTeamScore, other.awayTeamScore);
     }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "homeTeamName='" + homeTeamName + '\'' +
+                ", homeTeamScore=" + homeTeamScore +
+                ", awayTeamName='" + awayTeamName + '\'' +
+                ", awayTeamScore=" + awayTeamScore +
+                '}';
+    }
 }

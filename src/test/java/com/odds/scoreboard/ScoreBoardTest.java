@@ -141,4 +141,33 @@ public class ScoreBoardTest {
         assertNotNull(matches);
         assertEquals(0, matches.size());
     }
+
+    @Test
+    public void matchesInProgressIfOneReturnSingleElemList() {
+        List<Match> expectedMatches = List.of(new Match("Mexico", 0, "Canada", 0));
+        when(matchStorage.getAll()).thenReturn(expectedMatches);
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        List<Match> matches = sc.matchesInProgress();
+
+        assertNotNull(matches);
+        assertEquals(expectedMatches, matches);
+    }
+
+    @Test
+    public void matchesInProgressIfDiffTotalScoresReturnOrdered() {
+        List<Match> unorderedMatches = List.of(new Match("Mexico", 0, "Canada", 5),
+                new Match("Spain", 10, "Brazil", 2),
+                new Match("Germany", 2, "France", 2));
+        when(matchStorage.getAll()).thenReturn(unorderedMatches);
+
+        ScoreBoard sc = new ScoreBoard(matchStorage);
+        List<Match> matches = sc.matchesInProgress();
+
+        List<Match> expectedMatches = List.of(new Match("Spain", 10, "Brazil", 2),
+                new Match("Mexico", 0, "Canada", 5),
+                new Match("Germany", 2, "France", 2));
+        assertNotNull(matches);
+        assertEquals(expectedMatches, matches);
+    }
 }
