@@ -20,5 +20,9 @@ public class ScoreBoard {
     }
 
     public void updateScore(String homeTeam, int homeTeamScore, String awayTeam, int awayTeamScore) {
+        Match match = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
+        String matchId = homeTeam + "_" + awayTeam;
+
+        storage.update(matchId, match);
     }
 }
