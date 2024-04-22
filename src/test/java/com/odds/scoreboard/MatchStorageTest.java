@@ -79,6 +79,55 @@ public class MatchStorageTest {
         assertEquals(expectedStorage, actualStorage);
     }
 
+    @Test
+    public void updateIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+        var key = new MatchId(MEXICO, CANADA);
+        var startTime = OffsetDateTime.now();
+        var existingMatch = new Match(MEXICO, 0, CANADA, 0, startTime);
+        var newMatch = new Match(MEXICO, 0, CANADA, 1);
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key.getId(), existingMatch));
+
+        matchStorage.update(key, newMatch);
+
+        var expectedStorage = new ConcurrentHashMap<>();
+        var expectedMatch = new Match(MEXICO, 0, CANADA, 1, startTime);
+        expectedStorage.put(key.getId(), expectedMatch);
+
+        var actualStorage = extractStorage(matchStorage);
+
+        assertEquals(expectedStorage, actualStorage);
+    }
+
+    @Test
+    public void updateIfTwoElemsInStorageUpdateCorrect() throws NoSuchFieldException, IllegalAccessException {
+        var key1 = new MatchId(MEXICO, CANADA);
+        var startTime1 = OffsetDateTime.now();
+        var match1 = new Match(MEXICO, 0, CANADA, 0, startTime1);
+
+        var key2 = new MatchId(SPAIN, BRAZIL);
+        var startTime2 = OffsetDateTime.now().minusMinutes(35);
+        var match2 = new Match(SPAIN, 0, BRAZIL, 0, startTime2);
+
+        var keyForUpdate = new MatchId(SPAIN, BRAZIL);
+        var matchToUpdate = new Match(SPAIN, 0, BRAZIL, 1);
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key1.getId(), match1, key2.getId(), match2));
+
+        matchStorage.update(keyForUpdate, matchToUpdate);
+
+        var expectedStorage = new ConcurrentHashMap<>();
+        var updatedMatch = new Match(SPAIN, 0, BRAZIL, 1, startTime2);
+        expectedStorage.put(key1.getId(), match1);
+        expectedStorage.put(keyForUpdate.getId(), updatedMatch);
+
+        var actualStorage = extractStorage(matchStorage);
+
+        assertEquals(expectedStorage, actualStorage);
+    }
+
     private ConcurrentMap<String, Match> extractStorage(MatchStorage matchStorage) throws NoSuchFieldException, IllegalAccessException {
         var map = MatchStorage.class.getDeclaredField("storage");
         map.setAccessible(true);
