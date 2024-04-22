@@ -9,6 +9,7 @@ public class MatchStorage {
     private ConcurrentMap<String, Match> storage = new ConcurrentHashMap<>();
 
     public void save(MatchId key, Match value) {
+        storage.put(key.getId(), value);
     }
 
     public void update(MatchId key, Match value) {
