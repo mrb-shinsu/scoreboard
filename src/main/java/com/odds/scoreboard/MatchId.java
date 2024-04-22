@@ -9,6 +9,10 @@ public class MatchId {
         this.id = homeTeam + "_" + awayTeam;
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
