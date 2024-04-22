@@ -13,6 +13,7 @@ target/
 .idea/encodings.xml
 .idea/misc.xml
 .idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
 *.iws
 *.iml
 *.ipr
