@@ -60,7 +60,7 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
 
-        String expectedKey = homeTeam + "_" + awayTeam;
+        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
         Match expectedMatch = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
         verify(matchStorage, times(1)).
                 update(expectedKey, expectedMatch);
@@ -71,7 +71,7 @@ public class ScoreBoardTest {
         String homeTeam = "Mexico", awayTeam = "Canada";
         int homeTeamScore = 1, awayTeamScore = 2;
         doThrow(RuntimeException.class).when(matchStorage)
-                .update(anyString(), any());
+                .update(any(), any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));

@@ -32,7 +32,7 @@ public class ScoreBoard {
         validateNotNegative(homeTeamScore, awayTeamScore);
 
         Match match = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
-        String matchId = homeTeam + "_" + awayTeam;
+        MatchId matchId = new MatchId(homeTeam, awayTeam);
 
         storage.update(matchId, match);
     }
