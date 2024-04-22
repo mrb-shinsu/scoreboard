@@ -143,7 +143,7 @@ public class MatchStorageTest {
         var e = assertThrows(RuntimeException.class, () -> matchStorage.update(newKey, newMatch));
 
         var actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains("Key doesn't exists"));
+        assertTrue(actualMessage.contains("Key doesn't exist"));
 
         var expectedStorage = new ConcurrentHashMap<>();
         expectedStorage.put(existingKey.getId(), existingMatch);

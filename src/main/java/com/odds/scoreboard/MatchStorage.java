@@ -16,6 +16,10 @@ public class MatchStorage {
     }
 
     public void update(MatchId key, Match value) {
+        if (!storage.containsKey(key.getId())) {
+            throw new RuntimeException("Key doesn't exist");
+        }
+
         storage.merge(key.getId(), value,
                 (oldMatch, newMatch) -> {
                     oldMatch.setHomeTeamScore(newMatch.getHomeTeamScore());
