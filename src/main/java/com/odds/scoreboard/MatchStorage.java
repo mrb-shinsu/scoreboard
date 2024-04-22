@@ -9,7 +9,10 @@ public class MatchStorage {
     private ConcurrentMap<String, Match> storage = new ConcurrentHashMap<>();
 
     public void save(MatchId key, Match value) {
-        storage.put(key.getId(), value);
+        Match existingValue = storage.putIfAbsent(key.getId(), value);
+        if (existingValue != null) {
+            throw new RuntimeException("Key already exists");
+        }
     }
 
     public void update(MatchId key, Match value) {
