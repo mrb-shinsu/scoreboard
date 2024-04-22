@@ -25,7 +25,7 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         sc.startMatch(homeTeam, awayTeam);
 
-        String expectedKey = homeTeam + "_" + awayTeam;
+        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
         OffsetDateTime expectedStartTime = OffsetDateTime.now(clock);
         Match expectedMatch = new Match(homeTeam, 0, awayTeam, 0, expectedStartTime);
         verify(matchStorage, times(1)).
@@ -36,7 +36,7 @@ public class ScoreBoardTest {
     public void startMatchIfStorageExceptionThrowException() {
         String homeTeam = "Mexico", awayTeam = "Canada";
         doThrow(RuntimeException.class).when(matchStorage)
-                .save(anyString(), any());
+                .save(any(), any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         assertThrows(RuntimeException.class, () -> sc.startMatch(homeTeam, awayTeam));

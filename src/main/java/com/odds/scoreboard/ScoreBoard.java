@@ -22,7 +22,7 @@ public class ScoreBoard {
 
         OffsetDateTime startTime = OffsetDateTime.now(clock);
         Match match = new Match(homeTeam, 0, awayTeam, 0, startTime);
-        String matchId = homeTeam + "_" + awayTeam;
+        MatchId matchId = new MatchId(homeTeam, awayTeam);
 
         storage.save(matchId, match);
     }

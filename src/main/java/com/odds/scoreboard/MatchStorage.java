@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MatchStorage {
 
-    public void save(String key, Match value) {
+    public void save(MatchId key, Match value) {
     }
 
     public void update(String key, Match value) {
