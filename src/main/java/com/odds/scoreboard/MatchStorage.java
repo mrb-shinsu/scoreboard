@@ -16,6 +16,13 @@ public class MatchStorage {
     }
 
     public void update(MatchId key, Match value) {
+        storage.merge(key.getId(), value,
+                (oldMatch, newMatch) -> {
+                    oldMatch.setHomeTeamScore(newMatch.getHomeTeamScore());
+                    oldMatch.setAwayTeamScore(newMatch.getAwayTeamScore());
+                    return oldMatch;
+                }
+        );
     }
 
     public void delete(MatchId expectedKey) {
