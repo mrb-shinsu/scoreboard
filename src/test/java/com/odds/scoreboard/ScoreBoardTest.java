@@ -108,7 +108,7 @@ public class ScoreBoardTest {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         sc.finishMatch(homeTeam, awayTeam);
 
-        String expectedKey = homeTeam + "_" + awayTeam;
+        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
         verify(matchStorage, times(1)).
                 delete(expectedKey);
     }
@@ -117,7 +117,7 @@ public class ScoreBoardTest {
     public void finishMatchIfStorageExceptionThrowException() {
         String homeTeam = "Mexico", awayTeam = "Canada";
         doThrow(RuntimeException.class).when(matchStorage)
-                .delete(anyString());
+                .delete(any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         assertThrows(RuntimeException.class, () -> sc.finishMatch(homeTeam, awayTeam));

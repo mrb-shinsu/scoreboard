@@ -10,7 +10,7 @@ public class MatchStorage {
     public void update(MatchId key, Match value) {
     }
 
-    public void delete(String expectedKey) {
+    public void delete(MatchId expectedKey) {
     }
 
     public List<Match> getAll() {

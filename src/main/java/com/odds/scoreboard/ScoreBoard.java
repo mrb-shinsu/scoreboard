@@ -40,7 +40,7 @@ public class ScoreBoard {
     public void finishMatch(String homeTeam, String awayTeam) {
         validateNotNullOrEmpty(homeTeam, awayTeam);
 
-        String matchId = homeTeam + "_" + awayTeam;
+        MatchId matchId = new MatchId(homeTeam, awayTeam);
 
         storage.delete(matchId);
     }
