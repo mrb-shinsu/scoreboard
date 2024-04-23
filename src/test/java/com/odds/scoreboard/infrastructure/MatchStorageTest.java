@@ -2,6 +2,8 @@ package com.odds.scoreboard.infrastructure;
 
 import com.odds.scoreboard.domain.Match;
 import com.odds.scoreboard.domain.MatchId;
+import com.odds.scoreboard.infrastructure.exception.KeyExistsException;
+import com.odds.scoreboard.infrastructure.exception.KeyNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
@@ -70,10 +72,7 @@ public class MatchStorageTest {
         var matchStorage = new MatchStorage();
         initStorage(matchStorage, Map.of(key.getId(), existingMatch));
 
-        var e = assertThrows(RuntimeException.class, () -> matchStorage.save(key, newMatch));
-
-        var actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains("Key already exists"));
+        assertThrows(KeyExistsException.class, () -> matchStorage.save(key, newMatch));
 
         var expectedStorage = new ConcurrentHashMap<>();
         expectedStorage.put(key.getId(), existingMatch);
@@ -144,10 +143,7 @@ public class MatchStorageTest {
         var matchStorage = new MatchStorage();
         initStorage(matchStorage, Map.of(existingKey.getId(), existingMatch));
 
-        var e = assertThrows(RuntimeException.class, () -> matchStorage.update(newKey, newMatch));
-
-        var actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains("Key doesn't exist"));
+        assertThrows(KeyNotFoundException.class, () -> matchStorage.update(newKey, newMatch));
 
         var expectedStorage = new ConcurrentHashMap<>();
         expectedStorage.put(existingKey.getId(), existingMatch);
@@ -203,10 +199,7 @@ public class MatchStorageTest {
         initStorage(matchStorage, Map.of(key.getId(), match));
 
         var keyToDelete = new MatchId(SPAIN, BRAZIL);
-        var e = assertThrows(RuntimeException.class, () -> matchStorage.delete(keyToDelete));
-
-        var actualMessage = e.getMessage();
-        assertTrue(actualMessage.contains("Key doesn't exist"));
+        assertThrows(KeyNotFoundException.class, () -> matchStorage.delete(keyToDelete));
 
         var expectedStorage = new ConcurrentHashMap<>();
         expectedStorage.put(key.getId(), match);

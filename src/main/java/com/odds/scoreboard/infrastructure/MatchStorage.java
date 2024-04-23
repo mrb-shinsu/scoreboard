@@ -2,6 +2,8 @@ package com.odds.scoreboard.infrastructure;
 
 import com.odds.scoreboard.domain.Match;
 import com.odds.scoreboard.domain.MatchId;
+import com.odds.scoreboard.infrastructure.exception.KeyExistsException;
+import com.odds.scoreboard.infrastructure.exception.KeyNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +18,13 @@ public class MatchStorage {
     public void save(MatchId key, Match value) {
         Match existingValue = storage.putIfAbsent(key.getId(), value);
         if (existingValue != null) {
-            throw new RuntimeException("Key already exists");
+            throw new KeyExistsException();
         }
     }
 
     public void update(MatchId key, Match value) {
         if (!storage.containsKey(key.getId())) {
-            throw new RuntimeException("Key doesn't exist");
+            throw new KeyNotFoundException();
         }
 
         storage.merge(key.getId(), value,
@@ -37,7 +39,7 @@ public class MatchStorage {
     public void delete(MatchId key) {
         Match deleted = storage.remove(key.getId());
         if (deleted == null) {
-            throw new RuntimeException("Key doesn't exist");
+            throw new KeyNotFoundException();
         }
     }
 
