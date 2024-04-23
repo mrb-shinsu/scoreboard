@@ -24,6 +24,11 @@ public class Match {
         this.startTime = startTime;
     }
 
+    public Match(Match other) {
+        this(other.homeTeamName, other.homeTeamScore, other.awayTeamName, other.awayTeamScore);
+        this.startTime = other.startTime;
+    }
+
     public int getTotalScore() {
         return this.homeTeamScore + this.awayTeamScore;
     }
@@ -79,7 +84,7 @@ public class Match {
                 "homeTeamName='" + homeTeamName + '\'' +
                 ", homeTeamScore=" + homeTeamScore +
                 ", awayTeamName='" + awayTeamName + '\'' +
-                ", awayTeamScore='" + awayTeamScore + '\'' +
+                ", awayTeamScore=" + awayTeamScore +
                 ", startTime=" + startTime +
                 '}';
     }

@@ -240,6 +240,41 @@ public class MatchStorageTest {
         assertTrue(matches.containsAll(List.of(match1, match2)));
     }
 
+    @Test
+    public void getAllIfModifyReturnedValuesStorageIsNotChanged() throws NoSuchFieldException, IllegalAccessException {
+        var startTime = OffsetDateTime.now();
+
+        var key1 = new MatchId(MEXICO, CANADA);
+        var match1 = new Match(MEXICO, 0, CANADA, 0, startTime);
+
+        var key2 = new MatchId(SPAIN, BRAZIL);
+        var match2 = new Match(SPAIN, 0, BRAZIL, 0, startTime);
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key1.getId(), match1, key2.getId(), match2));
+
+        // we expect that nothing is changed in storage
+        var expectedStorage = new ConcurrentHashMap<>();
+        expectedStorage.put(new MatchId(MEXICO, CANADA).getId(),
+                new Match(MEXICO, 0, CANADA, 0, startTime));
+        expectedStorage.put(new MatchId(SPAIN, BRAZIL).getId(),
+                new Match(SPAIN, 0, BRAZIL, 0, startTime));
+
+        var matches = matchStorage.getAll();
+
+        // verify that getAll didn't change anything
+        var actualStorage = extractStorage(matchStorage);
+        assertEquals(expectedStorage, actualStorage);
+
+        // get one element and change something
+        var m = matches.getFirst();
+        m.setAwayTeamScore(1000);
+
+        // nothing should be changed
+        actualStorage = extractStorage(matchStorage);
+        assertEquals(expectedStorage, actualStorage);
+    }
+
     private ConcurrentMap<String, Match> extractStorage(MatchStorage matchStorage) throws NoSuchFieldException, IllegalAccessException {
         var map = MatchStorage.class.getDeclaredField("storage");
         map.setAccessible(true);

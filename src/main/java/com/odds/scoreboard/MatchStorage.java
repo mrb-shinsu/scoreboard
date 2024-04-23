@@ -1,8 +1,10 @@
 package com.odds.scoreboard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 public class MatchStorage {
 
@@ -36,7 +38,16 @@ public class MatchStorage {
         }
     }
 
+    /**
+     * Returns deep copy of all matches saved in storage.
+     * Any changes performed on result don't affect storage itself.
+     *
+     * @return List of all matches in storage
+     */
     public List<Match> getAll() {
-        return storage.values().stream().toList();
+        return storage.values()
+                .stream()
+                .map(Match::new)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
