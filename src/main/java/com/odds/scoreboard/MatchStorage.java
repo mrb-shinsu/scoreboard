@@ -37,7 +37,6 @@ public class MatchStorage {
     }
 
     public List<Match> getAll() {
-        return null;
-
+        return storage.values().stream().toList();
     }
 }
