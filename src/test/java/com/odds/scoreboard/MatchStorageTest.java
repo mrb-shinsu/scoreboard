@@ -3,11 +3,13 @@ package com.odds.scoreboard;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -210,6 +212,32 @@ public class MatchStorageTest {
         var actualStorage = extractStorage(matchStorage);
 
         assertEquals(expectedStorage, actualStorage);
+    }
+
+    @Test
+    public void getAllIfEmptyReturnEmptyList() {
+        var matchStorage = new MatchStorage();
+        var matches = matchStorage.getAll();
+
+        assertNotNull(matches);
+        assertEquals(0, matches.size());
+    }
+
+    @Test
+    public void getAllIfNotEmptyReturnAll() throws NoSuchFieldException, IllegalAccessException {
+        var key1 = new MatchId(MEXICO, CANADA);
+        var match1 = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
+
+        var key2 = new MatchId(SPAIN, BRAZIL);
+        var match2 = new Match(SPAIN, 0, BRAZIL, 0, OffsetDateTime.now().minusMinutes(35));
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key1.getId(), match1, key2.getId(), match2));
+
+        var matches = matchStorage.getAll();
+
+        assertNotNull(matches);
+        assertTrue(matches.containsAll(List.of(match1, match2)));
     }
 
     private ConcurrentMap<String, Match> extractStorage(MatchStorage matchStorage) throws NoSuchFieldException, IllegalAccessException {
