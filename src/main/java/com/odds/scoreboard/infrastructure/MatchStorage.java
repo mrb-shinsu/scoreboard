@@ -1,4 +1,7 @@
-package com.odds.scoreboard;
+package com.odds.scoreboard.infrastructure;
+
+import com.odds.scoreboard.domain.Match;
+import com.odds.scoreboard.domain.MatchId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class MatchStorage {
 
-    private ConcurrentMap<String, Match> storage = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Match> storage = new ConcurrentHashMap<>();
 
     public void save(MatchId key, Match value) {
         Match existingValue = storage.putIfAbsent(key.getId(), value);

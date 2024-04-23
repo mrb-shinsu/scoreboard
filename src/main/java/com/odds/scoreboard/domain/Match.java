@@ -1,13 +1,13 @@
-package com.odds.scoreboard;
+package com.odds.scoreboard.domain;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Match {
-    private String homeTeamName;
+    private final String homeTeamName;
     private int homeTeamScore;
 
-    private String awayTeamName;
+    private final String awayTeamName;
     private int awayTeamScore;
 
     private OffsetDateTime startTime;

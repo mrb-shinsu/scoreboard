@@ -1,9 +1,9 @@
-package com.odds.scoreboard;
+package com.odds.scoreboard.domain;
 
 import java.util.Objects;
 
 public class MatchId {
-    private String id;
+    private final String id;
 
     public MatchId(String homeTeam, String awayTeam) {
         this.id = homeTeam + "_" + awayTeam;

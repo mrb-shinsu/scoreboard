@@ -1,5 +1,7 @@
-package com.odds.scoreboard;
+package com.odds.scoreboard.infrastructure;
 
+import com.odds.scoreboard.domain.Match;
+import com.odds.scoreboard.domain.MatchId;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
