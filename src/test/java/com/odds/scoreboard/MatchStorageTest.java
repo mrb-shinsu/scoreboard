@@ -153,6 +153,43 @@ public class MatchStorageTest {
         assertEquals(expectedStorage, actualStorage);
     }
 
+    @Test
+    public void deleteIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+        var key = new MatchId(MEXICO, CANADA);
+        var match = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key.getId(), match));
+
+        matchStorage.delete(key);
+
+        var expectedStorage = new ConcurrentHashMap<>();
+        var actualStorage = extractStorage(matchStorage);
+
+        assertEquals(expectedStorage, actualStorage);
+    }
+
+    @Test
+    public void deleteIfTwoElemsInStorageDeleteCorrect() throws NoSuchFieldException, IllegalAccessException {
+        var key1 = new MatchId(MEXICO, CANADA);
+        var match1 = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
+
+        var key2 = new MatchId(SPAIN, BRAZIL);
+        var match2 = new Match(SPAIN, 0, BRAZIL, 0, OffsetDateTime.now().minusMinutes(35));
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key1.getId(), match1, key2.getId(), match2));
+
+        matchStorage.delete(key2);
+
+        var expectedStorage = new ConcurrentHashMap<>();
+        expectedStorage.put(key1.getId(), match1);
+
+        var actualStorage = extractStorage(matchStorage);
+
+        assertEquals(expectedStorage, actualStorage);
+    }
+
     private ConcurrentMap<String, Match> extractStorage(MatchStorage matchStorage) throws NoSuchFieldException, IllegalAccessException {
         var map = MatchStorage.class.getDeclaredField("storage");
         map.setAccessible(true);
