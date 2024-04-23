@@ -30,7 +30,10 @@ public class MatchStorage {
     }
 
     public void delete(MatchId key) {
-        storage.remove(key.getId());
+        Match deleted = storage.remove(key.getId());
+        if (deleted == null) {
+            throw new RuntimeException("Key doesn't exist");
+        }
     }
 
     public List<Match> getAll() {

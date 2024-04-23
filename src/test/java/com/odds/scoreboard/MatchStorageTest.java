@@ -190,6 +190,28 @@ public class MatchStorageTest {
         assertEquals(expectedStorage, actualStorage);
     }
 
+    @Test
+    public void deleteIfKeyDoesntExistThrowException() throws NoSuchFieldException, IllegalAccessException {
+        var key = new MatchId(MEXICO, CANADA);
+        var match = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
+
+        var matchStorage = new MatchStorage();
+        initStorage(matchStorage, Map.of(key.getId(), match));
+
+        var keyToDelete = new MatchId(SPAIN, BRAZIL);
+        var e = assertThrows(RuntimeException.class, () -> matchStorage.delete(keyToDelete));
+
+        var actualMessage = e.getMessage();
+        assertTrue(actualMessage.contains("Key doesn't exist"));
+
+        var expectedStorage = new ConcurrentHashMap<>();
+        expectedStorage.put(key.getId(), match);
+
+        var actualStorage = extractStorage(matchStorage);
+
+        assertEquals(expectedStorage, actualStorage);
+    }
+
     private ConcurrentMap<String, Match> extractStorage(MatchStorage matchStorage) throws NoSuchFieldException, IllegalAccessException {
         var map = MatchStorage.class.getDeclaredField("storage");
         map.setAccessible(true);
