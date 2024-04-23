@@ -29,7 +29,8 @@ public class MatchStorage {
         );
     }
 
-    public void delete(MatchId expectedKey) {
+    public void delete(MatchId key) {
+        storage.remove(key.getId());
     }
 
     public List<Match> getAll() {
