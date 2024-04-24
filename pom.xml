@@ -17,6 +17,8 @@
 
         <junit.version>5.10.2</junit.version>
         <mockito.version>5.11.0</mockito.version>
+        <equalsverifier.version>3.16.1</equalsverifier.version>
+
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     </properties>
@@ -32,6 +34,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>${equalsverifier.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
