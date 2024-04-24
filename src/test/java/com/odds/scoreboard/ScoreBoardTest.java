@@ -34,7 +34,7 @@ public class ScoreBoardTest extends BaseTest {
     private final Clock clock = Clock.fixed(Instant.parse("2024-04-22T12:00:00.00Z"), ZoneId.of("UTC"));
 
     @Test
-    public void startMatchIfAllValidSuccess() {
+    void startMatchIfAllValidSuccess() {
         var scoreBoard = new ScoreBoard(matchStorage, clock);
         scoreBoard.startMatch(MEXICO, CANADA);
 
@@ -47,7 +47,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void startMatchIfStorageExceptionThrowException() {
+    void startMatchIfStorageExceptionThrowException() {
         doThrow(RuntimeException.class).when(matchStorage)
                 .save(any(), any());
 
@@ -58,7 +58,7 @@ public class ScoreBoardTest extends BaseTest {
 
     @ParameterizedTest
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
-    public void startMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
+    void startMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         var scoreBoard = new ScoreBoard(matchStorage, clock);
         var e = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.startMatch(homeTeam, awayTeam));
@@ -68,7 +68,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void updateScoreIfAllValidSuccess() {
+    void updateScoreIfAllValidSuccess() {
         int homeTeamScore = 1, awayTeamScore = 2;
 
         var scoreBoard = new ScoreBoard(matchStorage, clock);
@@ -82,7 +82,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void updateScoreIfStorageExceptionThrowException() {
+    void updateScoreIfStorageExceptionThrowException() {
         int homeTeamScore = 1, awayTeamScore = 2;
         doThrow(RuntimeException.class).when(matchStorage)
                 .update(any(), any());
@@ -94,7 +94,7 @@ public class ScoreBoardTest extends BaseTest {
 
     @ParameterizedTest
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
-    public void updateScoreIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
+    void updateScoreIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         int homeTeamScore = 1, awayTeamScore = 2;
 
         var scoreBoard = new ScoreBoard(matchStorage, clock);
@@ -107,7 +107,7 @@ public class ScoreBoardTest extends BaseTest {
 
     @ParameterizedTest
     @CsvSource({"-1,1", "1,-1", "-1,-1"})
-    public void updateScoreIfHomeAndAwayTeamScoreNegativeThrowException(int homeTeamScore, int awayTeamScore) {
+    void updateScoreIfHomeAndAwayTeamScoreNegativeThrowException(int homeTeamScore, int awayTeamScore) {
         var scoreBoard = new ScoreBoard(matchStorage, clock);
         var e = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
@@ -117,7 +117,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void finishMatchIfAllValidSuccess() {
+    void finishMatchIfAllValidSuccess() {
         var scoreBoard = new ScoreBoard(matchStorage, clock);
         scoreBoard.finishMatch(MEXICO, CANADA);
 
@@ -128,7 +128,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void finishMatchIfStorageExceptionThrowException() {
+    void finishMatchIfStorageExceptionThrowException() {
         doThrow(RuntimeException.class).when(matchStorage)
                 .delete(any());
 
@@ -138,7 +138,7 @@ public class ScoreBoardTest extends BaseTest {
 
     @ParameterizedTest
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
-    public void finishMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
+    void finishMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         var scoreBoard = new ScoreBoard(matchStorage, clock);
         var e = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.finishMatch(homeTeam, awayTeam));
@@ -148,7 +148,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void matchesInProgressIfNoMatchesReturnEmptyList() {
+    void matchesInProgressIfNoMatchesReturnEmptyList() {
         when(matchStorage.getAll()).thenReturn(List.of());
 
         var scoreBoard = new ScoreBoard(matchStorage, clock);
@@ -159,7 +159,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void matchesInProgressIfOneReturnSingleElemList() {
+    void matchesInProgressIfOneReturnSingleElemList() {
         var expectedMatches = List.of(new Match(MEXICO, 0, CANADA, 0));
         when(matchStorage.getAll()).thenReturn(expectedMatches);
 
@@ -171,7 +171,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void matchesInProgressIfDiffTotalScoresReturnOrdered() {
+    void matchesInProgressIfDiffTotalScoresReturnOrdered() {
         var now = OffsetDateTime.now(ZoneOffset.UTC);
         var nowPlus10Minutes = now.plusMinutes(10);
 
@@ -193,7 +193,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void matchesInProgressIfSomeTotalScoresEqualReturnOrdered() {
+    void matchesInProgressIfSomeTotalScoresEqualReturnOrdered() {
         var now = OffsetDateTime.now(ZoneOffset.UTC);
         var nowMinus10Minutes = now.minusMinutes(10);
         var nowMinus20Minutes = now.minusMinutes(20);
@@ -222,7 +222,7 @@ public class ScoreBoardTest extends BaseTest {
     }
 
     @Test
-    public void matchesInProgressIfAlreadyOrderedReturnOrdered() {
+    void matchesInProgressIfAlreadyOrderedReturnOrdered() {
         var now = OffsetDateTime.now(ZoneOffset.UTC);
         var nowMinus10Minutes = now.minusMinutes(10);
         var nowMinus20Minutes = now.minusMinutes(20);

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class MatchIdTest {
     @Test
-    public void equalsContract() {
+    void equalsContract() {
         EqualsVerifier.simple().forClass(MatchId.class).verify();
     }
 }

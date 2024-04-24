@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MatchStorageTest extends BaseTest {
     @Test
-    public void saveIfEmptyStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+    void saveIfEmptyStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
         var expectedKey = new MatchId(MEXICO, CANADA);
         var expectedMatch = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -36,7 +36,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void saveIfNotEmptyStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+    void saveIfNotEmptyStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
         var expectedKey = new MatchId(MEXICO, CANADA);
         var expectedMatch = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -58,7 +58,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void saveIfKeyExistsThrowException() throws NoSuchFieldException, IllegalAccessException {
+    void saveIfKeyExistsThrowException() throws NoSuchFieldException, IllegalAccessException {
         var key = new MatchId(MEXICO, CANADA);
         var existingMatch = new Match(MEXICO, 0, CANADA, 5, OffsetDateTime.now());
         var newMatch = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
@@ -77,7 +77,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void updateIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+    void updateIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
         var key = new MatchId(MEXICO, CANADA);
         var startTime = OffsetDateTime.now();
         var existingMatch = new Match(MEXICO, 0, CANADA, 0, startTime);
@@ -98,7 +98,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void updateIfTwoElemsInStorageUpdateCorrect() throws NoSuchFieldException, IllegalAccessException {
+    void updateIfTwoElemsInStorageUpdateCorrect() throws NoSuchFieldException, IllegalAccessException {
         var key1 = new MatchId(MEXICO, CANADA);
         var startTime1 = OffsetDateTime.now();
         var match1 = new Match(MEXICO, 0, CANADA, 0, startTime1);
@@ -126,7 +126,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void updateIfKeyDoesntExistThrowException() throws NoSuchFieldException, IllegalAccessException {
+    void updateIfKeyDoesntExistThrowException() throws NoSuchFieldException, IllegalAccessException {
         var existingKey = new MatchId(MEXICO, CANADA);
         var startTime = OffsetDateTime.now();
         var existingMatch = new Match(MEXICO, 0, CANADA, 0, startTime);
@@ -148,7 +148,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void deleteIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
+    void deleteIfSingleElemInStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
         var key = new MatchId(MEXICO, CANADA);
         var match = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -164,7 +164,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void deleteIfTwoElemsInStorageDeleteCorrect() throws NoSuchFieldException, IllegalAccessException {
+    void deleteIfTwoElemsInStorageDeleteCorrect() throws NoSuchFieldException, IllegalAccessException {
         var key1 = new MatchId(MEXICO, CANADA);
         var match1 = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -185,7 +185,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void deleteIfKeyDoesntExistThrowException() throws NoSuchFieldException, IllegalAccessException {
+    void deleteIfKeyDoesntExistThrowException() throws NoSuchFieldException, IllegalAccessException {
         var key = new MatchId(MEXICO, CANADA);
         var match = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -204,7 +204,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void getAllIfEmptyReturnEmptyList() {
+    void getAllIfEmptyReturnEmptyList() {
         var matchStorage = new MatchStorage();
         var matches = matchStorage.getAll();
 
@@ -213,7 +213,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void getAllIfNotEmptyReturnAll() throws NoSuchFieldException, IllegalAccessException {
+    void getAllIfNotEmptyReturnAll() throws NoSuchFieldException, IllegalAccessException {
         var key1 = new MatchId(MEXICO, CANADA);
         var match1 = new Match(MEXICO, 0, CANADA, 0, OffsetDateTime.now());
 
@@ -230,7 +230,7 @@ public class MatchStorageTest extends BaseTest {
     }
 
     @Test
-    public void getAllIfModifyReturnedValuesStorageIsNotChanged() throws NoSuchFieldException, IllegalAccessException {
+    void getAllIfModifyReturnedValuesStorageIsNotChanged() throws NoSuchFieldException, IllegalAccessException {
         var startTime = OffsetDateTime.now();
 
         var key1 = new MatchId(MEXICO, CANADA);
