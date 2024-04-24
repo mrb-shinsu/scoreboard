@@ -11,10 +11,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+/**
+ * Thread-safe storage for {@code Match} objects.
+ * It's a key-value based, using {@code ConcurrentHashMap} as internal storage.
+ * Key is based on playing team names, meaning it can store only one match between same teams at the same time.
+ * <p>
+ * Since {@code ConcurrentHashMap} is used, this storage obeys the same concurrency specification and if any additional
+ * locking or synchronization is expected, it must be done externally.
+ */
 public class MatchStorage {
 
     private final ConcurrentMap<String, Match> storage = new ConcurrentHashMap<>();
 
+    /**
+     * Save {@code Match} for certain {@code MatchId}.
+     * <p>
+     * If {@code key} already exists in storage, {@code KeyExistsException} is thrown.
+     *
+     * @param key   match identifier, not null
+     * @param value match to save, not null
+     */
     public void save(MatchId key, Match value) {
         Match existingValue = storage.putIfAbsent(key.getId(), value);
         if (existingValue != null) {
@@ -22,6 +38,14 @@ public class MatchStorage {
         }
     }
 
+    /**
+     * Update {@code Match} for certain {@code MatchId}.
+     * <p>
+     * If {@code key} doesn't exist in storage, {@code KeyNotFoundException} is thrown.
+     *
+     * @param key   match identifier, not null
+     * @param value match to update, not null
+     */
     public void update(MatchId key, Match value) {
         if (!storage.containsKey(key.getId())) {
             throw new KeyNotFoundException();
@@ -36,6 +60,13 @@ public class MatchStorage {
         );
     }
 
+    /**
+     * Delete {@code Match} under specific {@code key}.
+     * <p>
+     * If {@code key} doesn't exist in storage, {@code KeyNotFoundException} is thrown.
+     *
+     * @param key match identifier to delete, not null
+     */
     public void delete(MatchId key) {
         Match deleted = storage.remove(key.getId());
         if (deleted == null) {

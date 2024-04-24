@@ -3,6 +3,9 @@ package com.odds.scoreboard.domain;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+/**
+ * Entity holding data about match between two teams
+ */
 public class Match {
     private final String homeTeamName;
     private int homeTeamScore;

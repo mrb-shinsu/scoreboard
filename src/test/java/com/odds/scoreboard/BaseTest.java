@@ -1,6 +1,9 @@
 package com.odds.scoreboard;
 
-public abstract class BaseTest {
+/**
+ * Base class for all tests containing constants and common methods.
+ */
+public class BaseTest {
     protected static final String MEXICO = "Mexico";
     protected static final String CANADA = "Canada";
     protected static final String SPAIN = "Spain";

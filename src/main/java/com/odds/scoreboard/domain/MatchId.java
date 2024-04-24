@@ -2,6 +2,10 @@ package com.odds.scoreboard.domain;
 
 import java.util.Objects;
 
+/**
+ * Identifier for matches between two teams.
+ * It's constructed as homeTeamName + "_" + awayTeamName
+ */
 public class MatchId {
     private final String id;
 
