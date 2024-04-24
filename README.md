@@ -82,7 +82,7 @@ Matches are ordered by their total score descending. If they have same total sco
 most recently started match.
 
 ```java
-scoreBoard.matchesInProgress();
+List<Match> matches = scoreBoard.matchesInProgress();
 ```
 
 If other threads are updating the board while this operation is executed, we can get stale version of data.
