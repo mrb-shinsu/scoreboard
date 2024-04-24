@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class ScoreBoardTest {
+public class ScoreBoardTest extends BaseTest {
     private static final String INVALID_INPUT_NULL_EMPTY = "Invalid input: Params null or empty";
     private static final String INVALID_INPUT_NEGATIVE = "Invalid input: Params negative";
 
@@ -35,26 +35,23 @@ public class ScoreBoardTest {
 
     @Test
     public void startMatchIfAllValidSuccess() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
-
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.startMatch(homeTeam, awayTeam);
+        sc.startMatch(MEXICO, CANADA);
 
-        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
+        MatchId expectedKey = new MatchId(MEXICO, CANADA);
         OffsetDateTime expectedStartTime = OffsetDateTime.now(clock);
-        Match expectedMatch = new Match(homeTeam, 0, awayTeam, 0, expectedStartTime);
+        Match expectedMatch = new Match(MEXICO, 0, CANADA, 0, expectedStartTime);
         verify(matchStorage, times(1)).
                 save(expectedKey, expectedMatch);
     }
 
     @Test
     public void startMatchIfStorageExceptionThrowException() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
         doThrow(RuntimeException.class).when(matchStorage)
                 .save(any(), any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.startMatch(homeTeam, awayTeam));
+        assertThrows(RuntimeException.class, () -> sc.startMatch(MEXICO, CANADA));
     }
 
     @ParameterizedTest
@@ -69,27 +66,25 @@ public class ScoreBoardTest {
 
     @Test
     public void updateScoreIfAllValidSuccess() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
         int homeTeamScore = 1, awayTeamScore = 2;
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
+        sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore);
 
-        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
-        Match expectedMatch = new Match(homeTeam, homeTeamScore, awayTeam, awayTeamScore);
+        MatchId expectedKey = new MatchId(MEXICO, CANADA);
+        Match expectedMatch = new Match(MEXICO, homeTeamScore, CANADA, awayTeamScore);
         verify(matchStorage, times(1)).
                 update(expectedKey, expectedMatch);
     }
 
     @Test
     public void updateScoreIfStorageExceptionThrowException() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
         int homeTeamScore = 1, awayTeamScore = 2;
         doThrow(RuntimeException.class).when(matchStorage)
                 .update(any(), any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+        assertThrows(RuntimeException.class, () -> sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
     }
 
     @ParameterizedTest
@@ -107,10 +102,8 @@ public class ScoreBoardTest {
     @ParameterizedTest
     @CsvSource({"-1,1", "1,-1", "-1,-1"})
     public void updateScoreIfHomeAndAwayTeamScoreNegativeThrowException(int homeTeamScore, int awayTeamScore) {
-        String homeTeam = "Mexico", awayTeam = "Canada";
-
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
 
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NEGATIVE));
@@ -118,24 +111,21 @@ public class ScoreBoardTest {
 
     @Test
     public void finishMatchIfAllValidSuccess() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
-
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.finishMatch(homeTeam, awayTeam);
+        sc.finishMatch(MEXICO, CANADA);
 
-        MatchId expectedKey = new MatchId(homeTeam, awayTeam);
+        MatchId expectedKey = new MatchId(MEXICO, CANADA);
         verify(matchStorage, times(1)).
                 delete(expectedKey);
     }
 
     @Test
     public void finishMatchIfStorageExceptionThrowException() {
-        String homeTeam = "Mexico", awayTeam = "Canada";
         doThrow(RuntimeException.class).when(matchStorage)
                 .delete(any());
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.finishMatch(homeTeam, awayTeam));
+        assertThrows(RuntimeException.class, () -> sc.finishMatch(MEXICO, CANADA));
     }
 
     @ParameterizedTest
@@ -161,7 +151,7 @@ public class ScoreBoardTest {
 
     @Test
     public void matchesInProgressIfOneReturnSingleElemList() {
-        List<Match> expectedMatches = List.of(new Match("Mexico", 0, "Canada", 0));
+        List<Match> expectedMatches = List.of(new Match(MEXICO, 0, CANADA, 0));
         when(matchStorage.getAll()).thenReturn(expectedMatches);
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
@@ -176,17 +166,17 @@ public class ScoreBoardTest {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         OffsetDateTime nowPlus10Minutes = now.plusMinutes(10);
 
-        List<Match> unorderedMatches = List.of(new Match("Mexico", 0, "Canada", 5, now),
-                new Match("Spain", 10, "Brazil", 2, nowPlus10Minutes),
-                new Match("Germany", 2, "France", 2, nowPlus10Minutes));
+        List<Match> unorderedMatches = List.of(new Match(MEXICO, 0, CANADA, 5, now),
+                new Match(SPAIN, 10, BRAZIL, 2, nowPlus10Minutes),
+                new Match(GERMANY, 2, FRANCE, 2, nowPlus10Minutes));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         List<Match> matches = sc.matchesInProgress();
 
-        List<Match> expectedMatches = List.of(new Match("Spain", 10, "Brazil", 2, nowPlus10Minutes),
-                new Match("Mexico", 0, "Canada", 5, now),
-                new Match("Germany", 2, "France", 2, nowPlus10Minutes));
+        List<Match> expectedMatches = List.of(new Match(SPAIN, 10, BRAZIL, 2, nowPlus10Minutes),
+                new Match(MEXICO, 0, CANADA, 5, now),
+                new Match(GERMANY, 2, FRANCE, 2, nowPlus10Minutes));
         assertNotNull(matches);
         assertEquals(expectedMatches, matches);
     }
@@ -200,22 +190,22 @@ public class ScoreBoardTest {
         OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
 
         List<Match> unorderedMatches = List.of(
-                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
-                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
-                new Match("Germany", 2, "France", 2, nowMinus20Minutes),
-                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
-                new Match("Argentina", 3, "Australia", 1, now));
+                new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
+                new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
+                new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes),
+                new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
+                new Match(ARGENTINA, 3, AUSTRALIA, 1, now));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         List<Match> matches = sc.matchesInProgress();
 
         List<Match> expectedMatches = List.of(
-                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
-                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
-                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
-                new Match("Argentina", 3, "Australia", 1, now),
-                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
+                new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
+                new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
+                new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
+                new Match(ARGENTINA, 3, AUSTRALIA, 1, now),
+                new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes));
         assertNotNull(matches);
         assertEquals(expectedMatches, matches);
     }
@@ -229,22 +219,22 @@ public class ScoreBoardTest {
         OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
 
         List<Match> unorderedMatches = List.of(
-                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
-                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
-                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
-                new Match("Argentina", 3, "Australia", 1, now),
-                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
+                new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
+                new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
+                new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
+                new Match(ARGENTINA, 3, AUSTRALIA, 1, now),
+                new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
         List<Match> matches = sc.matchesInProgress();
 
         List<Match> expectedMatches = List.of(
-                new Match("Uruguay", 6, "Italy", 6, nowMinus10Minutes),
-                new Match("Spain", 10, "Brazil", 2, nowMinus30Minutes),
-                new Match("Mexico", 0, "Canada", 5, nowMinus40Minutes),
-                new Match("Argentina", 3, "Australia", 1, now),
-                new Match("Germany", 2, "France", 2, nowMinus20Minutes));
+                new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
+                new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
+                new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
+                new Match(ARGENTINA, 3, AUSTRALIA, 1, now),
+                new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes));
         assertNotNull(matches);
         assertEquals(expectedMatches, matches);
     }

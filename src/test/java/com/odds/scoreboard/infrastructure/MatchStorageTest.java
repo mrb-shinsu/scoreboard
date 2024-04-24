@@ -1,5 +1,6 @@
 package com.odds.scoreboard.infrastructure;
 
+import com.odds.scoreboard.BaseTest;
 import com.odds.scoreboard.domain.Match;
 import com.odds.scoreboard.domain.MatchId;
 import com.odds.scoreboard.infrastructure.exception.KeyExistsException;
@@ -17,14 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MatchStorageTest {
-
-    private static final String MEXICO = "Mexico";
-    private static final String CANADA = "Canada";
-    private static final String SPAIN = "Spain";
-    private static final String BRAZIL = "Brazil";
-
-
+public class MatchStorageTest extends BaseTest {
     @Test
     public void saveIfEmptyStorageSuccess() throws NoSuchFieldException, IllegalAccessException {
         var expectedKey = new MatchId(MEXICO, CANADA);
