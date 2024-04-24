@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class ScoreBoardTest extends BaseTest {
+class ScoreBoardTest extends BaseTest {
     private static final String INVALID_INPUT_NULL_EMPTY = "Invalid input: Params null or empty";
     private static final String INVALID_INPUT_NEGATIVE = "Invalid input: Params negative";
 
