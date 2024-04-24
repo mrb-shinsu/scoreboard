@@ -35,12 +35,13 @@ public class ScoreBoardTest extends BaseTest {
 
     @Test
     public void startMatchIfAllValidSuccess() {
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.startMatch(MEXICO, CANADA);
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        scoreBoard.startMatch(MEXICO, CANADA);
 
-        MatchId expectedKey = new MatchId(MEXICO, CANADA);
-        OffsetDateTime expectedStartTime = OffsetDateTime.now(clock);
-        Match expectedMatch = new Match(MEXICO, 0, CANADA, 0, expectedStartTime);
+        var expectedKey = new MatchId(MEXICO, CANADA);
+        var expectedStartTime = OffsetDateTime.now(clock);
+        var expectedMatch = new Match(MEXICO, 0, CANADA, 0, expectedStartTime);
+
         verify(matchStorage, times(1)).
                 save(expectedKey, expectedMatch);
     }
@@ -50,17 +51,19 @@ public class ScoreBoardTest extends BaseTest {
         doThrow(RuntimeException.class).when(matchStorage)
                 .save(any(), any());
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.startMatch(MEXICO, CANADA));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        assertThrows(RuntimeException.class,
+                () -> scoreBoard.startMatch(MEXICO, CANADA));
     }
 
     @ParameterizedTest
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
     public void startMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.startMatch(homeTeam, awayTeam));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.startMatch(homeTeam, awayTeam));
 
-        String actualMessage = e.getMessage();
+        var actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
@@ -68,11 +71,12 @@ public class ScoreBoardTest extends BaseTest {
     public void updateScoreIfAllValidSuccess() {
         int homeTeamScore = 1, awayTeamScore = 2;
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore);
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        scoreBoard.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore);
 
-        MatchId expectedKey = new MatchId(MEXICO, CANADA);
-        Match expectedMatch = new Match(MEXICO, homeTeamScore, CANADA, awayTeamScore);
+        var expectedKey = new MatchId(MEXICO, CANADA);
+        var expectedMatch = new Match(MEXICO, homeTeamScore, CANADA, awayTeamScore);
+
         verify(matchStorage, times(1)).
                 update(expectedKey, expectedMatch);
     }
@@ -83,8 +87,9 @@ public class ScoreBoardTest extends BaseTest {
         doThrow(RuntimeException.class).when(matchStorage)
                 .update(any(), any());
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        assertThrows(RuntimeException.class,
+                () -> scoreBoard.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
     }
 
     @ParameterizedTest
@@ -92,29 +97,32 @@ public class ScoreBoardTest extends BaseTest {
     public void updateScoreIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         int homeTeamScore = 1, awayTeamScore = 2;
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
-        String actualMessage = e.getMessage();
+        var actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
     @ParameterizedTest
     @CsvSource({"-1,1", "1,-1", "-1,-1"})
     public void updateScoreIfHomeAndAwayTeamScoreNegativeThrowException(int homeTeamScore, int awayTeamScore) {
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.updateScore(MEXICO, homeTeamScore, CANADA, awayTeamScore));
 
-        String actualMessage = e.getMessage();
+        var actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NEGATIVE));
     }
 
     @Test
     public void finishMatchIfAllValidSuccess() {
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        sc.finishMatch(MEXICO, CANADA);
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        scoreBoard.finishMatch(MEXICO, CANADA);
 
-        MatchId expectedKey = new MatchId(MEXICO, CANADA);
+        var expectedKey = new MatchId(MEXICO, CANADA);
+
         verify(matchStorage, times(1)).
                 delete(expectedKey);
     }
@@ -124,17 +132,18 @@ public class ScoreBoardTest extends BaseTest {
         doThrow(RuntimeException.class).when(matchStorage)
                 .delete(any());
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        assertThrows(RuntimeException.class, () -> sc.finishMatch(MEXICO, CANADA));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        assertThrows(RuntimeException.class, () -> scoreBoard.finishMatch(MEXICO, CANADA));
     }
 
     @ParameterizedTest
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
     public void finishMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.finishMatch(homeTeam, awayTeam));
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.finishMatch(homeTeam, awayTeam));
 
-        String actualMessage = e.getMessage();
+        var actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
     }
 
@@ -142,8 +151,8 @@ public class ScoreBoardTest extends BaseTest {
     public void matchesInProgressIfNoMatchesReturnEmptyList() {
         when(matchStorage.getAll()).thenReturn(List.of());
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        List<Match> matches = sc.matchesInProgress();
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var matches = scoreBoard.matchesInProgress();
 
         assertNotNull(matches);
         assertEquals(0, matches.size());
@@ -151,11 +160,11 @@ public class ScoreBoardTest extends BaseTest {
 
     @Test
     public void matchesInProgressIfOneReturnSingleElemList() {
-        List<Match> expectedMatches = List.of(new Match(MEXICO, 0, CANADA, 0));
+        var expectedMatches = List.of(new Match(MEXICO, 0, CANADA, 0));
         when(matchStorage.getAll()).thenReturn(expectedMatches);
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        List<Match> matches = sc.matchesInProgress();
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var matches = scoreBoard.matchesInProgress();
 
         assertNotNull(matches);
         assertEquals(expectedMatches, matches);
@@ -163,18 +172,20 @@ public class ScoreBoardTest extends BaseTest {
 
     @Test
     public void matchesInProgressIfDiffTotalScoresReturnOrdered() {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        OffsetDateTime nowPlus10Minutes = now.plusMinutes(10);
+        var now = OffsetDateTime.now(ZoneOffset.UTC);
+        var nowPlus10Minutes = now.plusMinutes(10);
 
-        List<Match> unorderedMatches = List.of(new Match(MEXICO, 0, CANADA, 5, now),
+        var unorderedMatches = List.of(
+                new Match(MEXICO, 0, CANADA, 5, now),
                 new Match(SPAIN, 10, BRAZIL, 2, nowPlus10Minutes),
                 new Match(GERMANY, 2, FRANCE, 2, nowPlus10Minutes));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        List<Match> matches = sc.matchesInProgress();
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var matches = scoreBoard.matchesInProgress();
 
-        List<Match> expectedMatches = List.of(new Match(SPAIN, 10, BRAZIL, 2, nowPlus10Minutes),
+        var expectedMatches = List.of(
+                new Match(SPAIN, 10, BRAZIL, 2, nowPlus10Minutes),
                 new Match(MEXICO, 0, CANADA, 5, now),
                 new Match(GERMANY, 2, FRANCE, 2, nowPlus10Minutes));
         assertNotNull(matches);
@@ -183,13 +194,13 @@ public class ScoreBoardTest extends BaseTest {
 
     @Test
     public void matchesInProgressIfSomeTotalScoresEqualReturnOrdered() {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        OffsetDateTime nowMinus10Minutes = now.minusMinutes(10);
-        OffsetDateTime nowMinus20Minutes = now.minusMinutes(20);
-        OffsetDateTime nowMinus30Minutes = now.minusMinutes(30);
-        OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
+        var now = OffsetDateTime.now(ZoneOffset.UTC);
+        var nowMinus10Minutes = now.minusMinutes(10);
+        var nowMinus20Minutes = now.minusMinutes(20);
+        var nowMinus30Minutes = now.minusMinutes(30);
+        var nowMinus40Minutes = now.minusMinutes(40);
 
-        List<Match> unorderedMatches = List.of(
+        var unorderedMatches = List.of(
                 new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
                 new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
                 new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes),
@@ -197,10 +208,10 @@ public class ScoreBoardTest extends BaseTest {
                 new Match(ARGENTINA, 3, AUSTRALIA, 1, now));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        List<Match> matches = sc.matchesInProgress();
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var matches = scoreBoard.matchesInProgress();
 
-        List<Match> expectedMatches = List.of(
+        var expectedMatches = List.of(
                 new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
                 new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
                 new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
@@ -212,13 +223,13 @@ public class ScoreBoardTest extends BaseTest {
 
     @Test
     public void matchesInProgressIfAlreadyOrderedReturnOrdered() {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        OffsetDateTime nowMinus10Minutes = now.minusMinutes(10);
-        OffsetDateTime nowMinus20Minutes = now.minusMinutes(20);
-        OffsetDateTime nowMinus30Minutes = now.minusMinutes(30);
-        OffsetDateTime nowMinus40Minutes = now.minusMinutes(40);
+        var now = OffsetDateTime.now(ZoneOffset.UTC);
+        var nowMinus10Minutes = now.minusMinutes(10);
+        var nowMinus20Minutes = now.minusMinutes(20);
+        var nowMinus30Minutes = now.minusMinutes(30);
+        var nowMinus40Minutes = now.minusMinutes(40);
 
-        List<Match> unorderedMatches = List.of(
+        var unorderedMatches = List.of(
                 new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
                 new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
                 new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
@@ -226,10 +237,10 @@ public class ScoreBoardTest extends BaseTest {
                 new Match(GERMANY, 2, FRANCE, 2, nowMinus20Minutes));
         when(matchStorage.getAll()).thenReturn(unorderedMatches);
 
-        ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        List<Match> matches = sc.matchesInProgress();
+        var scoreBoard = new ScoreBoard(matchStorage, clock);
+        var matches = scoreBoard.matchesInProgress();
 
-        List<Match> expectedMatches = List.of(
+        var expectedMatches = List.of(
                 new Match(URUGUAY, 6, ITALY, 6, nowMinus10Minutes),
                 new Match(SPAIN, 10, BRAZIL, 2, nowMinus30Minutes),
                 new Match(MEXICO, 0, CANADA, 5, nowMinus40Minutes),
