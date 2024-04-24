@@ -61,7 +61,7 @@ public class ScoreBoardTest {
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
     public void startMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(RuntimeException.class, () -> sc.startMatch(homeTeam, awayTeam));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.startMatch(homeTeam, awayTeam));
 
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
@@ -98,7 +98,7 @@ public class ScoreBoardTest {
         int homeTeamScore = 1, awayTeamScore = 2;
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));
@@ -110,7 +110,7 @@ public class ScoreBoardTest {
         String homeTeam = "Mexico", awayTeam = "Canada";
 
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(RuntimeException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.updateScore(homeTeam, homeTeamScore, awayTeam, awayTeamScore));
 
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NEGATIVE));
@@ -142,7 +142,7 @@ public class ScoreBoardTest {
     @CsvSource({",Canada", "'',Canada", "Mexico,", "Mexico,''", ",", ",''", "'',", "'',''"})
     public void finishMatchIfHomeAndAwayTeamNullOrEmptyThrowException(String homeTeam, String awayTeam) {
         ScoreBoard sc = new ScoreBoard(matchStorage, clock);
-        Exception e = assertThrows(RuntimeException.class, () -> sc.finishMatch(homeTeam, awayTeam));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> sc.finishMatch(homeTeam, awayTeam));
 
         String actualMessage = e.getMessage();
         assertTrue(actualMessage.contains(INVALID_INPUT_NULL_EMPTY));

@@ -63,7 +63,7 @@ public class ScoreBoard {
     private void validateNotNullOrEmpty(String... params) {
         for (String p : params) {
             if (p == null || p.isBlank()) {
-                throw new RuntimeException("Invalid input: Params null or empty");
+                throw new IllegalArgumentException("Invalid input: Params null or empty");
             }
         }
     }
@@ -71,7 +71,7 @@ public class ScoreBoard {
     private void validateNotNegative(int... params) {
         for (int p : params) {
             if (p < 0) {
-                throw new RuntimeException("Invalid input: Params negative");
+                throw new IllegalArgumentException("Invalid input: Params negative");
             }
         }
     }
